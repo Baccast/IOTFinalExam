@@ -69,10 +69,12 @@ class App:
         temperaturedata = secondline.split(" ")[9]
         temperature = float(temperaturedata[2:])
         temperature = temperature / 1000
-        print("Sensor: " + id + " - Current temperature: %0.3f C" % temperature)
+        print(" - Current temperature: %0.3f C" % temperature)
 
         if self.max_temperature is not None and temperature >= self.max_temperature:
             self.turn_fan_on()
+        else:
+            self.turn_fan_off()
 
     def read_sensors(self):
         for file in os.listdir("/sys/bus/w1/devices/"):
