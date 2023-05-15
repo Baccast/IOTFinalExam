@@ -47,6 +47,10 @@ class App:
         threading.Thread(target=self.loop).start()
 
     def set_temperature(self):
+        # Make sure text box is not empty and only has numbers
+        if not self.temperature_entry.get().isdigit():
+            print("Invalid temperature")
+            return
         temperature = self.temperature_entry.get()
         self.max_temperature = float(temperature)
         print("Set temperature:", self.max_temperature)
