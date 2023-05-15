@@ -3,6 +3,19 @@ import tkinter.font as tkFont
 import os
 import time
 import threading
+import RPi.GPIO as GPIO
+import csv
+from datetime import datetime
+
+# Set up GPIO pins
+BUZZER_PIN = 6
+
+
+def setupBuzzer():
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)  # Use BCM numbering for GPIO pins
+    GPIO.setup(BUZZER_PIN, GPIO.OUT)   # Set pin mode as output
+    GPIO.output(BUZZER_PIN, GPIO.LOW)
 
 
 class Fan:
@@ -21,6 +34,8 @@ class Fan:
 
 class App:
     def __init__(self, root):
+        setupBuzzer()
+        self.log_file = "greenhouse_data.csv"
         self.fan = Fan()
         # setting title
         root.title("Fan Control")
@@ -72,10 +87,11 @@ class App:
 
     def turn_fan_on(self):
         print("Fan turned ON")
+        GPIO.output(BUZZER_PIN, GPIO.HIGH)
         self.fan.turn_on()
 
     def turn_fan_off(self):
-        print("Fan turned OFF")
+        GPIO.output(BUZZER_PIN, GPIO.LOW)
         self.fan.turn_off()
 
     def read_sensor(self, id):
@@ -104,10 +120,34 @@ class App:
     def loop(self):
         while self.running:
             self.read_sensors()
+            self.log_temperature()
+            self.print_temperature()
             time.sleep(1)
+            if time.time() % 15 == 0:
+                self.log_temperature()
 
     def destroy(self):
         self.running = False
+
+    def log_temperature(self):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        temperature = self.get_current_temperature()
+
+        with open(self.log_file, "a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([timestamp, temperature])
+
+    def get_current_temperature(self):
+        for file in os.listdir("/sys/bus/w1/devices/"):
+            if file.startswith("28-"):
+                tfile = open("/sys/bus/w1/devices/" + file + "/w1_slave")
+                text = tfile.read()
+                tfile.close()
+                secondline = text.split("\n")[1]
+                temperaturedata = secondline.split(" ")[9]
+                temperature = float(temperaturedata[2:])
+                temperature = temperature / 1000
+                return temperature
 
 
 if __name__ == "__main__":
