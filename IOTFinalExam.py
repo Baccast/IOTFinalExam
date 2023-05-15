@@ -76,7 +76,7 @@ class App:
             if file.startswith("28-"):
                 self.read_sensor(file)
                 count += 1
-            if count == 0:
+            elif count == 0:
                 print("No sensor found! Check connection")
 
     def loop(self):
