@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os
 import time
+import threading
 
 
 class App:
@@ -39,6 +40,12 @@ class App:
         # Initialize the maximum temperature
         self.max_temperature = None
 
+        # Create a flag to control the loop
+        self.running = True
+
+        # Start the loop in a separate thread
+        threading.Thread(target=self.loop).start()
+
     def set_temperature(self):
         temperature = self.temperature_entry.get()
         self.max_temperature = float(temperature)
@@ -63,28 +70,24 @@ class App:
         if self.max_temperature is not None and temperature >= self.max_temperature:
             self.turn_fan_on()
 
-    def read_sensors(self):
+    def read_sensor(self):
         count = 0
         for file in os.listdir("/sys/bus/w1/devices/"):
             if file.startswith("28-"):
                 self.read_sensor(file)
                 count += 1
-        if count == 0:
-            print("No sensor found! Check connection")
 
     def loop(self):
-        while True:
+        while self.running:
             self.read_sensors()
             time.sleep(1)
 
     def destroy(self):
-        pass
+        self.running = False
 
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
-    try:
-        app.loop()
-    except KeyboardInterrupt:
-        app.destroy()
+    root.mainloop()
+    app.destroy()
