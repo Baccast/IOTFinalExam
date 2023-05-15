@@ -5,6 +5,10 @@ import time
 import threading
 
 
+# public bool to see if fan is running
+global fan_running
+
+
 class App:
     def __init__(self, root):
         # setting title
@@ -57,9 +61,11 @@ class App:
 
     def turn_fan_on(self):
         print("Fan turned ON")
+        fan_running = True
 
     def turn_fan_off(self):
         print("Fan turned OFF")
+        fan_running = False
 
     def read_sensor(self, id):
         tfile = open("/sys/bus/w1/devices/" + id + "/w1_slave")
@@ -72,9 +78,11 @@ class App:
         print(" - Current temperature: %0.3f C" % temperature)
 
         if self.max_temperature is not None and temperature >= self.max_temperature:
-            self.turn_fan_on()
+            if not fan_running:
+                self.turn_fan_on()
         else:
-            self.turn_fan_off()
+            if fan_running:
+                self.turn_fan_off()
 
     def read_sensors(self):
         for file in os.listdir("/sys/bus/w1/devices/"):
