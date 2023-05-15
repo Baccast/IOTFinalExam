@@ -70,13 +70,6 @@ class App:
         if self.max_temperature is not None and temperature >= self.max_temperature:
             self.turn_fan_on()
 
-    def read_sensor(self):
-        count = 0
-        for file in os.listdir("/sys/bus/w1/devices/"):
-            if file.startswith("28-"):
-                self.read_sensor(file)
-                count += 1
-
     def loop(self):
         while self.running:
             self.read_sensors()
