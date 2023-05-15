@@ -91,7 +91,8 @@ class App:
         if self.max_temperature is not None and temperature >= self.max_temperature:
             if not self.fan.status():
                 self.turn_fan_on()
-        else:
+
+        if self.max_temperature is not None and temperature < self.max_temperature:
             if self.fan.status():
                 self.turn_fan_off()
 
