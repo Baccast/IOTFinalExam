@@ -148,6 +148,7 @@ class App:
 
 def fileLogger(root):
     while True:
+        print("Logging temperature...")
         root.log_temperature()
         time.sleep(15)
 
