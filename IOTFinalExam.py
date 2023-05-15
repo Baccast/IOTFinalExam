@@ -19,7 +19,7 @@ def readSensor(id):
     temperaturedata = secondline.split(" ")[9]
     temperature = float(temperaturedata[2:])
     temperature = temperature / 1000
-    print "Sensor: " + id + " - Current temperature : %0.3f C" % temperature
+    print("Sensor: " + id + " - Current temperature : %0.3f C" % temperature)
 
 
 # Reads temperature from all sensors found in /sys/bus/w1/devices/
@@ -32,7 +32,7 @@ def readSensors():
             readSensor(file)
             count += 1
     if (count == 0):
-        print "No sensor found! Check connection"
+        print("No sensor found! Check connection")
 
 # read temperature every second for all connected sensors
 
