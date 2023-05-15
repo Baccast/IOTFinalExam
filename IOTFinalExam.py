@@ -71,13 +71,9 @@ class App:
             self.turn_fan_on()
 
     def read_sensors(self):
-        count = 0
         for file in os.listdir("/sys/bus/w1/devices/"):
             if file.startswith("28-"):
                 self.read_sensor(file)
-                count += 1
-            elif count == 0:
-                print("No sensor found! Check connection")
 
     def loop(self):
         while self.running:
