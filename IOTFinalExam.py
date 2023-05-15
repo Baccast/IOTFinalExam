@@ -121,8 +121,6 @@ class App:
         while self.running:
             self.read_sensors()
             time.sleep(1)
-            if time.time() % 15 == 0:
-                self.log_temperature()
 
     def destroy(self):
         self.running = False
@@ -148,8 +146,25 @@ class App:
                 return temperature
 
 
+def fileLogger(root):
+    while True:
+        root.log_temperature()
+        time.sleep(15)
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
+
+    # Start the file logger in a separate thread
+    fileLogger_thread = threading.Thread(target=fileLogger, args=(app,))
+    fileLogger_thread.start()
+
+    # Start the main loop of the Tkinter application
     root.mainloop()
+
+    # Wait for the file logger thread to finish
+    fileLogger_thread.join()
+
+    # Clean up
     app.destroy()
