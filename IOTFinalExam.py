@@ -21,6 +21,7 @@ class Fan:
 
 class App:
     def __init__(self, root):
+        self.fan = Fan()
         # setting title
         root.title("Fan Control")
         # setting window size
@@ -71,11 +72,11 @@ class App:
 
     def turn_fan_on(self):
         print("Fan turned ON")
-        fan_running = True
+        self.fan.turn_on()
 
     def turn_fan_off(self):
         print("Fan turned OFF")
-        fan_running = False
+        self.fan.turn_off()
 
     def read_sensor(self, id):
         tfile = open("/sys/bus/w1/devices/" + id + "/w1_slave")
@@ -88,10 +89,10 @@ class App:
         print(" - Current temperature: %0.3f C" % temperature)
 
         if self.max_temperature is not None and temperature >= self.max_temperature:
-            if not Fan.status():
+            if not self.fan.status():
                 self.turn_fan_on()
         else:
-            if Fan.status():
+            if self.fan.status():
                 self.turn_fan_off()
 
     def read_sensors(self):
