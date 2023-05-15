@@ -115,6 +115,9 @@ def read_temp():
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = App(root)
-    root.mainloop()
+    while True:
+        print("Temperature: %.2f °C" % read_temp())
+        time.sleep(1)
+    # root = tk.Tk()
+    # app = App(root)
+    # root.mainloop()
