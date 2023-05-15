@@ -10,8 +10,8 @@ class App:
         # setting title
         root.title("Fan Control")
         # setting window size
-        width = 600
-        height = 500
+        width = 200
+        height = 100
         screenwidth = root.winfo_screenwidth()
         screenheight = root.winfo_screenheight()
         alignstr = '%dx%d+%d+%d' % (width, height,
