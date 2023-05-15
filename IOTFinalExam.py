@@ -120,8 +120,6 @@ class App:
     def loop(self):
         while self.running:
             self.read_sensors()
-            self.log_temperature()
-            self.print_temperature()
             time.sleep(1)
             if time.time() % 15 == 0:
                 self.log_temperature()
